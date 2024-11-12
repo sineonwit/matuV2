@@ -1,0 +1,86 @@
+/* การตั้งค่าพื้นฐาน */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ส่วนของ header */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* เลย์เอาต์ของเมนู */
+.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.menu-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.menu-item label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu-item input {
+    width: 60%;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ปรับปรุงปุ่ม */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* เลย์เอาต์การแสดงผลบนหน้าจอมือถือ */
+@media screen and (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    .menu-item {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 15px;
+    }
+}

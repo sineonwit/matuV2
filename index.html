@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกโต๊ะ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>เลือกโต๊ะที่ต้องการ</h1>
+    <div class="table-selection">
+        <div class="tables">
+            <script>
+                for (let i = 1; i <= 30; i++) {
+                    document.write(`
+                        <button onclick="selectTable(${i})">โต๊ะ ${i}</button>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <script>
+        function selectTable(tableNumber) {
+            // บันทึกหมายเลขโต๊ะที่เลือกใน LocalStorage
+            localStorage.setItem('selectedTable', tableNumber);
+            // เปลี่ยนเส้นทางไปยังหน้าเมนู
+            window.location.href = 'menu.html';
+        }
+    </script>
+</body>
+</html>

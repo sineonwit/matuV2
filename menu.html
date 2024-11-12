@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สั่งอาหาร</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>เมนูสำหรับโต๊ะ <span id="tableNumber"></span></h1>
+    </header>
+
+    <main>
+        <div class="menu">
+            <div class="menu-item">
+                <label>เนื้อ (ราคา 200 บาท/กิโลกรัม)</label>
+                <input type="number" name="food" data-food-name="เนื้อ" data-price="200" step="0.1" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>เบียร์สิงห์ (ราคา 50 บาท)</label>
+                <input type="number" name="food" data-food-name="เบียร์สิงห์" data-price="50" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>เบียร์ช้าง (ราคา 50 บาท)</label>
+                <input type="number" name="food" data-food-name="เบียร์ช้าง" data-price="50" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>เบียร์ลีโอ (ราคา 45 บาท)</label>
+                <input type="number" name="food" data-food-name="เบียร์ลีโอ" data-price="45" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>บัดไวเซอร์ (ราคา 55 บาท)</label>
+                <input type="number" name="food" data-food-name="บัดไวเซอร์" data-price="55" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>รีเจนซี่ (ราคา 60 บาท)</label>
+                <input type="number" name="food" data-food-name="รีเจนซี่" data-price="60" min="0" value="0">
+            </div>
+            <!-- เพิ่มเมนูใหม่ -->
+            <div class="menu-item">
+                <label>หงษ์ทอง (ราคา 45 บาท)</label>
+                <input type="number" name="food" data-food-name="หงษ์ทอง" data-price="45" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>แสงโสม (ราคา 40 บาท)</label>
+                <input type="number" name="food" data-food-name="แสงโสม" data-price="40" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>น้ำอัดลม (ราคา 30 บาท)</label>
+                <input type="number" name="food" data-food-name="น้ำอัดลม" data-price="30" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>น้ำแข็ง (ราคา 10 บาท)</label>
+                <input type="number" name="food" data-food-name="น้ำแข็ง" data-price="10" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <label>น้ำเปล่า (ราคา 15 บาท)</label>
+                <input type="number" name="food" data-food-name="น้ำเปล่า" data-price="15" min="0" value="0">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="submitOrder()">ยืนยันการสั่งอาหาร</button>
+            <button onclick="showOrder()">แสดงรายการที่สั่ง</button>
+            <button onclick="goBackToTableSelection()">กลับไปหน้าเลือกโต๊ะ</button>
+        </div>
+    </main>
+
+    <script>
+        // ดึงหมายเลขโต๊ะที่เลือกจาก LocalStorage
+        const tableNumber = localStorage.getItem('selectedTable');
+        document.getElementById('tableNumber').innerText = tableNumber;
+
+        function submitOrder() {
+            const order = [];
+            
+            // วนลูปเก็บรายการอาหารที่มีจำนวนมากกว่า 0 พร้อมคำนวณราคาสุทธิ
+            document.querySelectorAll('input[name="food"]').forEach((item) => {
+                const quantity = parseFloat(item.value); // เปลี่ยนเป็น parseFloat เพื่อรองรับเลขทศนิยม
+                const price = parseFloat(item.getAttribute('data-price'));
+                if (quantity > 0) {
+                    order.push({
+                        name: item.getAttribute('data-food-name'),
+                        quantity: quantity,
+                        price: price,
+                        total: quantity * price // คำนวณราคาสุทธิของรายการนั้น
+                    });
+                }
+            });
+
+            if (order.length > 0) {
+                // ดึงข้อมูลรายการที่สั่งก่อนหน้ามาจาก LocalStorage
+                const previousOrder = localStorage.getItem(`order_table_${tableNumber}`);
+                let combinedOrder = previousOrder ? JSON.parse(previousOrder) : [];
+
+                // รวมข้อมูลรายการที่สั่งใหม่กับรายการเดิม
+                combinedOrder = [...combinedOrder, ...order];
+
+                // เก็บข้อมูลการสั่งอาหารใหม่ใน Local Storage โดยแยกตามหมายเลขโต๊ะ
+                localStorage.setItem(`order_table_${tableNumber}`, JSON.stringify(combinedOrder));
+                
+                // แสดงข้อมูลที่สั่งใหม่และรวมรายการเดิม
+                alert("สั่งอาหารสำหรับโต๊ะ " + tableNumber + ":\n" + 
+                    combinedOrder.map(item => `${item.name} จำนวน ${item.quantity} ราคา ${item.price} บาท รวม ${item.total} บาท`).join("\n")
+                );
+                
+                // หลังจากแสดงข้อมูลแล้วให้กลับไปหน้าเลือกโต๊ะ
+                window.location.href = 'index.html';
+            } else {
+                alert("กรุณาระบุจำนวนอาหารก่อนทำการยืนยัน!");
+            }
+        }
+
+        function showOrder() {
+            // ดึงข้อมูลรายการที่สั่งของโต๊ะปัจจุบันจาก Local Storage
+            const storedOrder = localStorage.getItem(`order_table_${tableNumber}`);
+            if (storedOrder) {
+                const order = JSON.parse(storedOrder);
+                
+                // คำนวณราคาสุทธิทั้งหมด
+                const totalPrice = order.reduce((sum, item) => sum + item.total, 0);
+
+                const orderList = order.map(item => 
+                    `${item.name} จำนวน ${item.quantity} ราคา ${item.price} บาท รวม ${item.total} บาท`
+                ).join("\n");
+                
+                alert("รายการที่สั่งสำหรับโต๊ะ " + tableNumber + ":\n" + 
+                    orderList + 
+                    "\n\nราคาสุทธิทั้งหมด: " + totalPrice + " บาท"
+                );
+
+                // เพิ่มปุ่มชำระเงิน
+                const paymentButton = document.createElement('button');
+                paymentButton.innerText = 'ชำระเงิน';
+                paymentButton.onclick = payOrder;
+                document.body.appendChild(paymentButton);
+            } else {
+                alert("ยังไม่มีรายการที่สั่งสำหรับโต๊ะนี้");
+            }
+        }
+
+        function payOrder() {
+            // แสดงข้อความยืนยันการชำระเงิน
+            if (confirm("ยืนยันการชำระเงินสำหรับโต๊ะ " + tableNumber + " หรือไม่?")) {
+                // ลบข้อมูลการสั่งอาหารของโต๊ะนี้จาก Local Storage
+                localStorage.removeItem(`order_table_${tableNumber}`);
+                
+                // แสดงข้อความแจ้งเตือนและกลับไปยังหน้าเลือกโต๊ะ
+                alert("ชำระเงินเรียบร้อยสำหรับโต๊ะ " + tableNumber);
+                window.location.href = 'index.html';
+            }
+        }
+
+        function goBackToTableSelection() {
+            // กลับไปหน้าเลือกโต๊ะโดยไม่ต้องทำการยืนยันรายการ
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
